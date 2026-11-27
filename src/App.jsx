@@ -1,4 +1,5 @@
 
+import { Routes, Route, Outlet } from 'react-router-dom'
 import {
   Truck,
   ShieldCheck,
@@ -16,14 +17,11 @@ import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 
-function App() {
+import Shop from './pages/Shop'
+
+function Home() {
   return (
-    <div className="min-h-screen bg-white">
-
-      <AnnouncementBar />
-
-      <Navbar />
-
+    <>
       <HeroSection />
 
       {/* Benefits */}
@@ -58,20 +56,36 @@ function App() {
       </section>
 
       <CategorySection />
-
       <ProductSection />
-
       <SpecialOffers />
-
       <NewArrivals />
-
       <Newsletter />
+    </>
+  )
+}
+
+function Layout() {
+  return (
+    <div className="min-h-screen bg-white">
+      <AnnouncementBar />
+      <Navbar />
+
+      <Outlet />
 
       <Footer />
-
       <WhatsAppButton />
-
     </div>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="shop" element={<Shop />} />
+      </Route>
+    </Routes>
   )
 }
 
