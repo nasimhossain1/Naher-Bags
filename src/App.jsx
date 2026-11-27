@@ -10,6 +10,8 @@ import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
 import CategorySection from './components/CategorySection'
 import ProductSection from './components/ProductSection'
+import NewArrivals from './components/NewArrivals'
+import SpecialOffers from './components/SpecialOffers'
 
 function App() {
   return (
@@ -21,7 +23,7 @@ function App() {
 
       <HeroSection />
 
-      {/* Benefits Section */}
+      {/* Benefits */}
       <section className="border-b border-gray-100 py-8">
         <div className="container-width grid grid-cols-1 gap-7 sm:grid-cols-3">
 
@@ -29,9 +31,7 @@ function App() {
             <Truck className="text-brand-gold" size={27} />
             <div>
               <p className="text-sm font-semibold">Fast Delivery</p>
-              <p className="text-xs text-gray-500">
-                Across Bangladesh
-              </p>
+              <p className="text-xs text-gray-500">Across Bangladesh</p>
             </div>
           </div>
 
@@ -39,9 +39,7 @@ function App() {
             <ShieldCheck className="text-brand-gold" size={27} />
             <div>
               <p className="text-sm font-semibold">Quality Products</p>
-              <p className="text-xs text-gray-500">
-                Carefully selected bags
-              </p>
+              <p className="text-xs text-gray-500">Carefully selected bags</p>
             </div>
           </div>
 
@@ -49,9 +47,7 @@ function App() {
             <RefreshCw className="text-brand-gold" size={27} />
             <div>
               <p className="text-sm font-semibold">Easy Support</p>
-              <p className="text-xs text-gray-500">
-                Here to help you
-              </p>
+              <p className="text-xs text-gray-500">Here to help you</p>
             </div>
           </div>
 
@@ -61,6 +57,10 @@ function App() {
       <CategorySection />
 
       <ProductSection />
+
+      <SpecialOffers />
+
+      <NewArrivals />
 
       {/* Footer */}
       <footer id="contact" className="bg-brand-black py-12 text-white">
