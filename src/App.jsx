@@ -1,65 +1,42 @@
 
 import {
   ArrowRight,
-  Menu,
-  Search,
-  ShoppingBag,
-  UserRound,
-  Heart,
   Truck,
   ShieldCheck,
   RefreshCw,
 } from 'lucide-react'
 
+import AnnouncementBar from './components/AnnouncementBar'
+import Navbar from './components/Navbar'
+
 function App() {
+  const categories = [
+    {
+      name: 'Ladies Bags',
+      image: 'photo-1584917865442-de89df76afd3',
+    },
+    {
+      name: 'Backpacks',
+      image: 'photo-1553062407-98eeb64c6a62',
+    },
+    {
+      name: 'Travel Bags',
+      image: 'photo-1553062407-1e7e640cc6c0',
+    },
+    {
+      name: 'Office Bags',
+      image: 'photo-1553062407-7b4c4f1a0c6d',
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-white">
 
       {/* Announcement Bar */}
-      <div className="bg-brand-black py-2 text-center text-xs tracking-widest text-white">
-        FREE DELIVERY ON ORDERS OVER ৳3,000
-      </div>
+      <AnnouncementBar />
 
       {/* Navbar */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white">
-        <nav className="container-width flex h-20 items-center justify-between">
-
-          <button className="md:hidden" aria-label="Open menu">
-            <Menu size={23} />
-          </button>
-
-          <a href="#" className="text-2xl font-bold tracking-[0.15em] text-brand-black">
-            NAHER<span className="font-light text-brand-gold">.</span>
-            <span className="block text-[9px] font-normal tracking-[0.35em]">
-              BAGS & ACCESSORIES
-            </span>
-          </a>
-
-          <div className="hidden items-center gap-8 text-sm md:flex">
-            <a href="#" className="hover:text-brand-gold">Home</a>
-            <a href="#shop" className="hover:text-brand-gold">Shop</a>
-            <a href="#categories" className="hover:text-brand-gold">Categories</a>
-            <a href="#about" className="hover:text-brand-gold">About Us</a>
-            <a href="#contact" className="hover:text-brand-gold">Contact</a>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button aria-label="Search"><Search size={20} /></button>
-            <button className="hidden sm:block" aria-label="Account">
-              <UserRound size={20} />
-            </button>
-            <button className="hidden sm:block" aria-label="Wishlist">
-              <Heart size={20} />
-            </button>
-            <button aria-label="Shopping bag" className="relative">
-              <ShoppingBag size={21} />
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[10px] text-white">
-                0
-              </span>
-            </button>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative flex min-h-[570px] items-center overflow-hidden bg-brand-cream">
@@ -82,7 +59,7 @@ function App() {
 
             <div className="mt-9 flex flex-wrap gap-4">
               <a
-                href="#shop"
+                href="/shop"
                 className="inline-flex items-center gap-3 bg-brand-black px-8 py-4 text-sm font-semibold text-white transition hover:bg-brand-gold"
               >
                 SHOP NOW <ArrowRight size={17} />
@@ -107,15 +84,19 @@ function App() {
             />
 
             <div className="absolute bottom-5 left-5 bg-white px-5 py-4 shadow-lg">
-              <p className="text-xs tracking-widest text-brand-gold">NEW COLLECTION</p>
-              <p className="mt-1 text-sm font-semibold">Discover Your Style</p>
+              <p className="text-xs tracking-widest text-brand-gold">
+                NEW COLLECTION
+              </p>
+              <p className="mt-1 text-sm font-semibold">
+                Discover Your Style
+              </p>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* Benefits */}
+      {/* Benefits Section */}
       <section className="border-b border-gray-100 py-8">
         <div className="container-width grid grid-cols-1 gap-7 sm:grid-cols-3">
 
@@ -123,7 +104,9 @@ function App() {
             <Truck className="text-brand-gold" size={27} />
             <div>
               <p className="text-sm font-semibold">Fast Delivery</p>
-              <p className="text-xs text-gray-500">Across Bangladesh</p>
+              <p className="text-xs text-gray-500">
+                Across Bangladesh
+              </p>
             </div>
           </div>
 
@@ -131,7 +114,9 @@ function App() {
             <ShieldCheck className="text-brand-gold" size={27} />
             <div>
               <p className="text-sm font-semibold">Quality Products</p>
-              <p className="text-xs text-gray-500">Carefully selected bags</p>
+              <p className="text-xs text-gray-500">
+                Carefully selected bags
+              </p>
             </div>
           </div>
 
@@ -139,74 +124,79 @@ function App() {
             <RefreshCw className="text-brand-gold" size={27} />
             <div>
               <p className="text-sm font-semibold">Easy Support</p>
-              <p className="text-xs text-gray-500">Here to help you</p>
+              <p className="text-xs text-gray-500">
+                Here to help you
+              </p>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* Categories Preview */}
-      <section id="categories" className="container-width py-20">
+      {/* Categories Section */}
+      <section
+        id="categories"
+        className="container-width py-20"
+      >
         <div className="mb-10 text-center">
           <p className="text-xs font-semibold tracking-[0.3em] text-brand-gold">
             FIND YOUR PERFECT BAG
           </p>
+
           <h2 className="mt-3 text-3xl font-semibold text-brand-black md:text-4xl">
             Explore Categories
           </h2>
+
           <p className="mt-3 text-sm text-gray-500">
             Something beautiful for every occasion.
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-
-          {[
-            {
-              name: 'Ladies Bags',
-              image: 'photo-1584917865442-de89df76afd3',
-            },
-            {
-              name: 'Backpacks',
-              image: 'photo-1553062407-98eeb64c6a62',
-            },
-            {
-              name: 'Travel Bags',
-              image: 'photo-1553062407-1e7e640cc6c0',
-            },
-            {
-              name: 'Office Bags',
-              image: 'photo-1553062407-7b4c4f1a0c6d',
-            },
-          ].map((category) => (
-            <a href="#shop" key={category.name} className="group">
+          {categories.map((category) => (
+            <a
+              href="/shop"
+              key={category.name}
+              className="group"
+            >
               <div className="overflow-hidden bg-brand-cream">
                 <img
                   src={`https://images.unsplash.com/${category.image}?w=500&q=80`}
                   alt={category.name}
+                  loading="lazy"
                   className="h-52 w-full object-cover transition duration-500 group-hover:scale-105 md:h-72"
                 />
               </div>
+
               <div className="flex items-center justify-between py-4">
                 <h3 className="text-sm font-semibold md:text-base">
                   {category.name}
                 </h3>
-                <ArrowRight size={17} className="text-brand-gold" />
+
+                <ArrowRight
+                  size={17}
+                  className="text-brand-gold"
+                />
               </div>
             </a>
           ))}
-
         </div>
       </section>
 
-      {/* Footer Preview */}
-      <footer id="contact" className="bg-brand-black py-12 text-white">
+      {/* Footer */}
+      <footer
+        id="contact"
+        className="bg-brand-black py-12 text-white"
+      >
         <div className="container-width text-center">
-          <h2 className="text-2xl font-bold tracking-[0.2em]">NAHER BAGS</h2>
+          <h2 className="text-2xl font-bold tracking-[0.2em]">
+            NAHER BAGS
+          </h2>
+
           <p className="mt-3 text-sm tracking-widest text-brand-gold">
             CARRY YOUR STYLE.
           </p>
+
           <p className="mt-8 text-xs text-gray-400">
             © {new Date().getFullYear()} Naher Bags. All rights reserved.
           </p>
