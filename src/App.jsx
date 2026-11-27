@@ -12,6 +12,9 @@ import CategorySection from './components/CategorySection'
 import ProductSection from './components/ProductSection'
 import NewArrivals from './components/NewArrivals'
 import SpecialOffers from './components/SpecialOffers'
+import Newsletter from './components/Newsletter'
+import Footer from './components/Footer'
+import WhatsAppButton from './components/WhatsAppButton'
 
 function App() {
   return (
@@ -62,24 +65,11 @@ function App() {
 
       <NewArrivals />
 
-      {/* Footer */}
-      <footer id="contact" className="bg-brand-black py-12 text-white">
-        <div className="container-width text-center">
+      <Newsletter />
 
-          <h2 className="text-2xl font-bold tracking-[0.2em]">
-            NAHER BAGS
-          </h2>
+      <Footer />
 
-          <p className="mt-3 text-sm tracking-widest text-brand-gold">
-            CARRY YOUR STYLE.
-          </p>
-
-          <p className="mt-8 text-xs text-gray-400">
-            © {new Date().getFullYear()} Naher Bags. All rights reserved.
-          </p>
-
-        </div>
-      </footer>
+      <WhatsAppButton />
 
     </div>
   )
