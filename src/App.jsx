@@ -9,6 +9,7 @@ import AnnouncementBar from './components/AnnouncementBar'
 import Navbar from './components/Navbar'
 import HeroSection from './components/HeroSection'
 import CategorySection from './components/CategorySection'
+import ProductSection from './components/ProductSection'
 
 function App() {
   return (
@@ -57,14 +58,12 @@ function App() {
         </div>
       </section>
 
-      {/* Categories */}
       <CategorySection />
 
+      <ProductSection />
+
       {/* Footer */}
-      <footer
-        id="contact"
-        className="bg-brand-black py-12 text-white"
-      >
+      <footer id="contact" className="bg-brand-black py-12 text-white">
         <div className="container-width text-center">
 
           <h2 className="text-2xl font-bold tracking-[0.2em]">
