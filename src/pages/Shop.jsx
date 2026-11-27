@@ -1,10 +1,13 @@
 
 import { useMemo, useState } from 'react'
 import { Search, SlidersHorizontal, ShoppingBag, Star } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import products from '../data/products'
 
 function Shop() {
+  const navigate = useNavigate()
+
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
   const [sort, setSort] = useState('featured')
@@ -46,14 +49,14 @@ function Shop() {
     return result
   }, [search, category, sort])
 
-  const addToCart = (product) => {
+  const addToCart = (e, product) => {
+    e.stopPropagation()
     toast.success(`${product.name} added to cart!`)
   }
 
   return (
     <main className="min-h-screen bg-white">
 
-      {/* Page Heading */}
       <section className="bg-brand-cream py-16 text-center">
         <p className="mb-3 text-xs font-semibold tracking-[0.3em] text-brand-gold">
           EXPLORE OUR COLLECTION
@@ -105,7 +108,7 @@ function Shop() {
           </div>
         </div>
 
-        {/* Category Filter */}
+        {/* Categories */}
         <div className="mb-10">
           <h3 className="mb-4 text-sm font-semibold tracking-wider">
             SHOP BY CATEGORY
@@ -128,19 +131,29 @@ function Shop() {
           </div>
         </div>
 
-        {/* Product Count */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6">
           <p className="text-sm text-gray-500">
             Showing {filteredProducts.length} products
           </p>
         </div>
 
-        {/* Product Grid */}
+        {/* Products */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
 
             {filteredProducts.map((product) => (
-              <div key={product.id} className="group">
+              <div
+                key={product.id}
+                onClick={() => navigate(`/product/${product.id}`)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    navigate(`/product/${product.id}`)
+                  }
+                }}
+                role="link"
+                tabIndex={0}
+                className="group cursor-pointer"
+              >
 
                 <div className="relative overflow-hidden bg-brand-cream">
                   <img
@@ -184,18 +197,12 @@ function Shop() {
                   </div>
 
                   <button
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => addToCart(e, product)}
                     className="mt-4 flex w-full items-center justify-center gap-2 bg-brand-black py-3 text-xs font-semibold text-white transition hover:bg-brand-gold"
                   >
                     <ShoppingBag size={15} />
                     ADD TO CART
                   </button>
-
-                  {product.stock === 0 && (
-                    <p className="mt-2 text-xs text-red-500">
-                      Out of stock
-                    </p>
-                  )}
                 </div>
               </div>
             ))}

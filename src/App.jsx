@@ -18,13 +18,13 @@ import Footer from './components/Footer'
 import WhatsAppButton from './components/WhatsAppButton'
 
 import Shop from './pages/Shop'
+import ProductDetails from './pages/ProductDetails'
 
 function Home() {
   return (
     <>
       <HeroSection />
 
-      {/* Benefits */}
       <section className="border-b border-gray-100 py-8">
         <div className="container-width grid grid-cols-1 gap-7 sm:grid-cols-3">
 
@@ -69,9 +69,7 @@ function Layout() {
     <div className="min-h-screen bg-white">
       <AnnouncementBar />
       <Navbar />
-
       <Outlet />
-
       <Footer />
       <WhatsAppButton />
     </div>
@@ -84,6 +82,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="shop" element={<Shop />} />
+        <Route path="product/:id" element={<ProductDetails />} />
       </Route>
     </Routes>
   )
