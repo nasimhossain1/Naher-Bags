@@ -1,10 +1,6 @@
 
 import { Routes, Route, Outlet } from 'react-router-dom'
-import {
-  Truck,
-  ShieldCheck,
-  RefreshCw,
-} from 'lucide-react'
+import { Truck, ShieldCheck, RefreshCw } from 'lucide-react'
 
 import AnnouncementBar from './components/AnnouncementBar'
 import Navbar from './components/Navbar'
@@ -19,6 +15,9 @@ import WhatsAppButton from './components/WhatsAppButton'
 
 import Shop from './pages/Shop'
 import ProductDetails from './pages/ProductDetails'
+import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
+import OrderSuccess from './pages/OrderSuccess'
 
 function Home() {
   return (
@@ -27,7 +26,6 @@ function Home() {
 
       <section className="border-b border-gray-100 py-8">
         <div className="container-width grid grid-cols-1 gap-7 sm:grid-cols-3">
-
           <div className="flex items-center justify-center gap-3">
             <Truck className="text-brand-gold" size={27} />
             <div>
@@ -51,7 +49,6 @@ function Home() {
               <p className="text-xs text-gray-500">Here to help you</p>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -83,6 +80,9 @@ function App() {
         <Route index element={<Home />} />
         <Route path="shop" element={<Shop />} />
         <Route path="product/:id" element={<ProductDetails />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="checkout" element={<Checkout />} />
+        <Route path="order-success" element={<OrderSuccess />} />
       </Route>
     </Routes>
   )

@@ -1,16 +1,24 @@
 
 import { useMemo, useState } from 'react'
-import { Search, SlidersHorizontal, ShoppingBag, Star } from 'lucide-react'
+import {
+  Search,
+  SlidersHorizontal,
+  ShoppingBag,
+  Star,
+} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+
 import products from '../data/products'
+import { useCart } from '../context/CartContext'
 
 function Shop() {
   const navigate = useNavigate()
+  const { addToCart } = useCart()
 
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('All')
-  const [sort, setSort] = useState('featured')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [sortBy, setSortBy] = useState('featured')
 
   const categories = [
     'All',
@@ -20,215 +28,255 @@ function Shop() {
   const filteredProducts = useMemo(() => {
     let result = [...products]
 
-    if (search.trim()) {
+    if (searchTerm.trim()) {
       result = result.filter((product) =>
-        product.name.toLowerCase().includes(search.toLowerCase()),
+        product.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()),
       )
     }
 
-    if (category !== 'All') {
+    if (selectedCategory !== 'All') {
       result = result.filter(
-        (product) => product.category === category,
+        (product) => product.category === selectedCategory,
       )
     }
 
-    if (sort === 'low') {
-      result.sort((a, b) => a.price - b.price)
-    } else if (sort === 'high') {
-      result.sort((a, b) => b.price - a.price)
-    } else if (sort === 'rating') {
-      result.sort((a, b) => b.rating - a.rating)
-    } else if (sort === 'newest') {
-      result.sort((a, b) => Number(b.isNew) - Number(a.isNew))
-    } else {
-      result.sort(
-        (a, b) => Number(b.isFeatured) - Number(a.isFeatured),
-      )
+    switch (sortBy) {
+      case 'newest':
+        result.sort(
+          (a, b) => Number(b.isNew) - Number(a.isNew),
+        )
+        break
+
+      case 'price-low':
+        result.sort((a, b) => a.price - b.price)
+        break
+
+      case 'price-high':
+        result.sort((a, b) => b.price - a.price)
+        break
+
+      case 'rating':
+        result.sort((a, b) => b.rating - a.rating)
+        break
+
+      case 'featured':
+      default:
+        result.sort(
+          (a, b) =>
+            Number(b.isFeatured) - Number(a.isFeatured),
+        )
+        break
     }
 
     return result
-  }, [search, category, sort])
+  }, [searchTerm, selectedCategory, sortBy])
 
-  const addToCart = (e, product) => {
+  const handleAddToCart = (e, product) => {
     e.stopPropagation()
-    toast.success(`${product.name} added to cart!`)
+
+    if (product.stock < 1) {
+      toast.error('This product is out of stock')
+      return
+    }
+
+    addToCart(product, 1)
+    toast.success('Product added to cart!')
   }
 
   return (
-    <main className="min-h-screen bg-white">
-
-      <section className="bg-brand-cream py-16 text-center">
-        <p className="mb-3 text-xs font-semibold tracking-[0.3em] text-brand-gold">
-          EXPLORE OUR COLLECTION
+    <section className="container-width min-h-screen py-12">
+      {/* Page Heading */}
+      <div className="mb-10 text-center">
+        <p className="text-sm font-semibold uppercase tracking-[4px] text-brand-gold">
+          Explore Our Collection
         </p>
 
-        <h1 className="text-4xl font-bold text-brand-black md:text-5xl">
+        <h1 className="mt-3 text-4xl font-bold text-brand-black">
           Shop All Bags
         </h1>
 
-        <p className="mt-4 text-sm text-gray-500">
-          Find the perfect bag for every moment.
+        <p className="mt-3 text-gray-500">
+          Find the perfect bag for your everyday style.
         </p>
-      </section>
+      </div>
 
-      <section className="container-width py-12">
+      {/* Search and Sort */}
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="relative w-full md:max-w-md">
+          <Search
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            size={20}
+          />
 
-        {/* Search and Sorting */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <input
+            type="text"
+            placeholder="Search your favourite bag..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full border border-gray-200 py-3 pl-12 pr-4 outline-none transition focus:border-brand-gold"
+          />
+        </div>
 
-          <div className="relative w-full md:max-w-sm">
-            <Search
-              size={19}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-            />
+        <div className="flex items-center gap-3">
+          <SlidersHorizontal
+            size={19}
+            className="text-brand-gold"
+          />
 
-            <input
-              type="text"
-              placeholder="Search your favourite bag..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded border border-gray-200 py-3 pl-11 pr-4 text-sm outline-none focus:border-brand-gold"
-            />
-          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="w-full border border-gray-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-gold sm:w-auto"
+          >
+            <option value="featured">Featured</option>
+            <option value="newest">Newest</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+      </div>
 
-          <div className="flex items-center gap-3">
-            <SlidersHorizontal size={18} className="text-brand-gold" />
+      {/* Categories */}
+      <div className="mb-8 flex flex-wrap gap-3">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`border px-5 py-2 text-sm transition ${
+              selectedCategory === category
+                ? 'border-brand-black bg-brand-black text-white'
+                : 'border-gray-200 bg-white text-gray-600 hover:border-brand-gold hover:text-brand-gold'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
 
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="w-full rounded border border-gray-200 bg-white px-4 py-3 text-sm outline-none focus:border-brand-gold sm:w-auto"
+      {/* Product Count */}
+      <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+        <p className="text-sm text-gray-500">
+          Showing{' '}
+          <span className="font-semibold text-brand-black">
+            {filteredProducts.length}
+          </span>{' '}
+          products
+        </p>
+      </div>
+
+      {/* Product Grid */}
+      {filteredProducts.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              onClick={() => navigate(`/product/${product.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  navigate(`/product/${product.id}`)
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              className="group cursor-pointer overflow-hidden border border-gray-100 bg-white transition hover:-translate-y-1 hover:shadow-lg"
             >
-              <option value="featured">Featured</option>
-              <option value="newest">Newest</option>
-              <option value="low">Price: Low to High</option>
-              <option value="high">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
-            </select>
-          </div>
-        </div>
+              {/* Product Image */}
+              <div className="relative h-72 overflow-hidden bg-brand-cream">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
 
-        {/* Categories */}
-        <div className="mb-10">
-          <h3 className="mb-4 text-sm font-semibold tracking-wider">
-            SHOP BY CATEGORY
-          </h3>
+                {product.oldPrice > product.price && (
+                  <span className="absolute left-3 top-3 bg-red-500 px-3 py-1 text-xs font-semibold text-white">
+                    SALE
+                  </span>
+                )}
 
-          <div className="flex flex-wrap gap-2">
-            {categories.map((item) => (
-              <button
-                key={item}
-                onClick={() => setCategory(item)}
-                className={`rounded-full border px-4 py-2 text-xs transition ${
-                  category === item
-                    ? 'border-brand-black bg-brand-black text-white'
-                    : 'border-gray-200 text-gray-600 hover:border-brand-gold hover:text-brand-gold'
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
+                {product.isNew && (
+                  <span className="absolute right-3 top-3 bg-brand-gold px-3 py-1 text-xs font-semibold text-white">
+                    NEW
+                  </span>
+                )}
+              </div>
 
-        <div className="mb-6">
-          <p className="text-sm text-gray-500">
-            Showing {filteredProducts.length} products
-          </p>
-        </div>
+              {/* Product Information */}
+              <div className="p-4">
+                <p className="text-xs uppercase tracking-wider text-brand-gold">
+                  {product.category}
+                </p>
 
-        {/* Products */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+                <h3 className="mt-2 truncate text-base font-semibold text-brand-black">
+                  {product.name}
+                </h3>
 
-            {filteredProducts.map((product) => (
-              <div
-                key={product.id}
-                onClick={() => navigate(`/product/${product.id}`)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    navigate(`/product/${product.id}`)
-                  }
-                }}
-                role="link"
-                tabIndex={0}
-                className="group cursor-pointer"
-              >
-
-                <div className="relative overflow-hidden bg-brand-cream">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    loading="lazy"
-                    className="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105"
+                <div className="mt-2 flex items-center gap-1">
+                  <Star
+                    size={15}
+                    className="fill-yellow-400 text-yellow-400"
                   />
+                  <span className="text-sm text-gray-500">
+                    {product.rating}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="text-lg font-bold text-brand-black">
+                    ৳{product.price.toLocaleString('en-BD')}
+                  </span>
 
                   {product.oldPrice > product.price && (
-                    <span className="absolute left-3 top-3 bg-brand-black px-3 py-1 text-[10px] text-white">
-                      SALE
+                    <span className="text-sm text-gray-400 line-through">
+                      ৳{product.oldPrice.toLocaleString('en-BD')}
                     </span>
                   )}
                 </div>
 
-                <div className="pt-4">
-                  <p className="mb-2 text-[10px] uppercase tracking-widest text-gray-400">
-                    {product.category}
-                  </p>
-
-                  <h3 className="min-h-10 text-sm font-semibold text-brand-black">
-                    {product.name}
-                  </h3>
-
-                  <div className="mt-2 flex items-center gap-1 text-xs text-brand-gold">
-                    <Star size={13} fill="currentColor" />
-                    <span>{product.rating}</span>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="font-semibold text-brand-black">
-                      ৳{product.price.toLocaleString('en-BD')}
-                    </span>
-
-                    {product.oldPrice > product.price && (
-                      <span className="text-xs text-gray-400 line-through">
-                        ৳{product.oldPrice.toLocaleString('en-BD')}
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={(e) => addToCart(e, product)}
-                    className="mt-4 flex w-full items-center justify-center gap-2 bg-brand-black py-3 text-xs font-semibold text-white transition hover:bg-brand-gold"
-                  >
-                    <ShoppingBag size={15} />
-                    ADD TO CART
-                  </button>
-                </div>
+                <button
+                  onClick={(e) => handleAddToCart(e, product)}
+                  disabled={product.stock < 1}
+                  className="mt-4 flex w-full items-center justify-center gap-2 bg-brand-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-gold disabled:cursor-not-allowed disabled:bg-gray-400"
+                >
+                  <ShoppingBag size={17} />
+                  {product.stock > 0
+                    ? 'Add to Cart'
+                    : 'Out of Stock'}
+                </button>
               </div>
-            ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="py-20 text-center">
+          <ShoppingBag
+            size={45}
+            className="mx-auto text-gray-300"
+          />
 
-          </div>
-        ) : (
-          <div className="py-20 text-center">
-            <h3 className="text-xl font-semibold">No products found</h3>
-            <p className="mt-2 text-sm text-gray-500">
-              Try another search or category.
-            </p>
+          <h3 className="mt-4 text-xl font-semibold text-brand-black">
+            No Products Found
+          </h3>
 
-            <button
-              onClick={() => {
-                setSearch('')
-                setCategory('All')
-              }}
-              className="mt-5 bg-brand-black px-6 py-3 text-sm text-white"
-            >
-              Clear Filters
-            </button>
-          </div>
-        )}
+          <p className="mt-2 text-sm text-gray-500">
+            Try another search or select a different category.
+          </p>
 
-      </section>
-    </main>
+          <button
+            onClick={() => {
+              setSearchTerm('')
+              setSelectedCategory('All')
+            }}
+            className="mt-5 bg-brand-black px-6 py-3 text-sm font-semibold text-white hover:bg-brand-gold"
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
+    </section>
   )
 }
 
